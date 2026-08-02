@@ -43,7 +43,7 @@ class ShopWidget extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            /// الخلفية
+            /// 
             Column(
               children: [
                 Container(
@@ -59,7 +59,7 @@ class ShopWidget extends StatelessWidget {
               ],
             ),
 
-            /// زر الرجوع
+            /// 
             Positioned(
               top: 15,
               left: 10,
@@ -74,7 +74,7 @@ class ShopWidget extends StatelessWidget {
               ),
             ),
 
-            /// المحتوى
+            /// 
             Positioned(
               top: 120,
               left: 0,
@@ -96,7 +96,7 @@ class ShopWidget extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              /// الاسم + اللوجو
+                              /// 
                               Stack(
                                 clipBehavior: Clip.none,
                                 children: [
@@ -247,7 +247,7 @@ class ShopWidget extends StatelessWidget {
 
                               const SizedBox(height: 20),
 
-                              /// المنتجات
+                              /// 
                               GridView.builder(
                                 shrinkWrap: true,
                                 physics:

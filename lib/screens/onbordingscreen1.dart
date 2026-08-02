@@ -29,18 +29,17 @@ class Onbordingscreen1 extends StatelessWidget {
               return Stack(
                 children: [
 
-                  /// الخلفية
                   OnboardingBackground(
                     image: onBordinglist[index].image!,
                   ),
 
-                  /// زر الرجوع
+                  
                   if (controller.currentIndex > 0)
                     OnboardingBackButton(
                       onTap: controller.previousPage,
                     ),
 
-                  /// الكارد
+                  
                   OnboardingGlassCard(
                     title: onBordinglist[index].title!,
                     body: onBordinglist[index].body!,

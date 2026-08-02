@@ -1,11 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/routes/routes.dart';
+import 'package:project_user/services/Auth/sinup_Service.dart';
 
 class SinupController extends GetxController {
-
+SinupService service = SinupService();
   bool isShow = false;
-
+bool isLoading = false;
   // Controllers
   TextEditingController? email;
   TextEditingController? password;
@@ -34,6 +36,125 @@ class SinupController extends GetxController {
       print("Not Valid");
     }
   }
+
+
+
+
+Future<void> register() async {
+
+
+if(!formState.currentState!.validate()){
+  return;
+}
+
+
+try {
+
+
+isLoading = true;
+update();
+
+
+
+var response = await service.register(
+
+firstName: firstNameController!.text,
+lastName: lastNameController!.text,
+phone: phone_number!.text,
+email: email!.text,
+password: password!.text,
+birthday: Birthday!.text,
+gender: "male",
+
+);
+
+
+
+if(response.data["success"] == true){
+
+
+Get.snackbar(
+"Success",
+response.data["message"],
+);
+
+
+
+  String emailValue = response.data["data"]["user"]["email"];
+
+  String otpValue = response.data["data"]["debug_otp"].toString();
+
+
+  Get.offNamed(
+    AppRoutes.Verification,
+    arguments: {
+      "email": emailValue,
+      "otp": otpValue,
+    },
+  );
+print(response.data);
+
+
+}else{
+
+
+Get.snackbar(
+"Error",
+response.data["message"],
+);
+
+
+}
+
+
+
+} on DioException catch(e){
+
+
+print("TYPE : ${e.type}");
+print("MESSAGE : ${e.message}");
+print("DATA : ${e.response?.data}");
+
+
+
+Get.snackbar(
+"Error",
+e.response?.data["message"] ?? "Server Error",
+);
+
+
+
+}
+
+
+
+finally{
+
+isLoading=false;
+update();
+
+}
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Go To Login
   login() {

@@ -106,7 +106,7 @@ class BookingScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 30),
 
-                                      /// النجمة
+                                      /// 
                                       Stack(
                                         alignment: Alignment.center,
                                         children: const [

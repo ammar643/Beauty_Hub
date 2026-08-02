@@ -60,7 +60,7 @@ class Verification extends StatelessWidget {
             Center(
   child: Pinput(
      controller: controller.otpController,
-    length: 5,
+    length: 6,
     defaultPinTheme: PinTheme(
       width: 63,
       height: 63,
@@ -165,12 +165,16 @@ GetBuilder<VerificationControler>(
 
 const SizedBox(height: 20),
               ////////////////////////////////////////////
-              Verificationbottion(text: "Continue", onPressed: () {
+              Verificationbottion(
+text: "Continue",
+onPressed: () {
 
-              //  controller.goToCheckEmail();
-              }),
+controller.verifyOtp();
 
-              ////ويدجتbottion
+},
+),
+
+              ////
             ],
           ),
         ),

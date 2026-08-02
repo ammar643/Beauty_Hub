@@ -31,7 +31,7 @@ class PostsWidget extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            /// الخلفية
+            /// 
             Column(
               children: [
                 Container(
@@ -49,7 +49,7 @@ class PostsWidget extends StatelessWidget {
               ],
             ),
 
-            /// زر الرجوع
+            /// 
             Positioned(
               top: 15,
               left: 10,
@@ -59,7 +59,7 @@ class PostsWidget extends StatelessWidget {
               ),
             ),
 
-            /// المحتوى
+            /// 
             Positioned(
               top: 120,
               left: 0,
@@ -82,7 +82,7 @@ class PostsWidget extends StatelessWidget {
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
-                              /// الاسم واللوجو
+                              /// 
                               Stack(
                                 clipBehavior: Clip.none,
                                 children: [
@@ -111,7 +111,7 @@ class PostsWidget extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 30),
 
-                                      /// النجمة
+                                      /// 
                                       Stack(
                                         alignment: Alignment.center,
                                         children: const [
@@ -246,7 +246,7 @@ class PostsWidget extends StatelessWidget {
 
                               const SizedBox(height: 20),
 
-                              /// الصور
+                              /// 
                               GridView.builder(
                                 shrinkWrap: true,
                                 physics:
@@ -272,7 +272,7 @@ class PostsWidget extends StatelessWidget {
                                         ),
                                       ),
 
-                                      /// أيقونة القلب
+                                      /// 
                                       const Positioned(
                                         bottom: 8,
                                         left: 8,

@@ -87,7 +87,7 @@ class SalonDetailsScreen extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 30),
 
-                                      /// النجمة
+                                      /// 
                                       Stack(
                                         alignment: Alignment.center,
                                         children: const [
@@ -411,7 +411,7 @@ class SalonDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // صورة الموظف
+            // 
             Container(
               height: 150,
               width: double.infinity,
@@ -429,7 +429,7 @@ class SalonDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // الاسم والمهنة
+            // 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Row(
