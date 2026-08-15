@@ -93,12 +93,12 @@ class NewPassword  extends StatelessWidget {
 
               
               ////////////////////////////////////////////
-              forgotbottion(text: "Reset Password", onPressed: () {
+              forgotbottion(
+  text: "Reset Password",
+  onPressed: controller.resetPassword,
+),
 
-                //controller.;
-              }),
-
-              ////ويدجتbottion
+              ////
             ],
           ),
         ),

@@ -61,7 +61,7 @@ class Checkemail extends StatelessWidget {
             Center(
   child: Pinput(
      controller: controller.otpController,
-    length: 5,
+    length: 6,
     defaultPinTheme: PinTheme(
       width: 63,
       height: 63,
@@ -166,12 +166,16 @@ GetBuilder<CheckemailControler>(
 
 const SizedBox(height: 20),
               ////////////////////////////////////////////
-              forgotbottion(text: "Continue", onPressed: () {
+              forgotbottion(
+text: "Continue",
+onPressed: () {
 
-              //  controller.goToCheckEmail();
-              }),
+controller.verifyOtp();
 
-              ////ويدجتbottion
+},
+),
+
+            
             ],
           ),
         ),

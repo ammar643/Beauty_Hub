@@ -11,7 +11,7 @@ gotohome(){
 
 
 
-Get.offNamed(AppRoutes.homeScreen);
+Get.offNamed(AppRoutes.login);
  
 }
 

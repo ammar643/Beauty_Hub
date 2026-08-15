@@ -15,7 +15,6 @@ class ProfileImagePicker extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
 
-          // 🔵 الدائرة الرئيسية
           Container(
             width: 87,
             height: 87,
@@ -25,7 +24,6 @@ class ProfileImagePicker extends StatelessWidget {
             ),
           ),
 
-          // ➕ زر الإضافة (فوق يمين)
          Positioned(
   top: -10,
   left: 58,
@@ -52,7 +50,6 @@ class ProfileImagePicker extends StatelessWidget {
   ),
 ),
 
-          // 👤 أيقونة الإنسان في الوسط
           const Positioned.fill(
             child: Icon(
               Icons.person,

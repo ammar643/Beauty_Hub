@@ -37,7 +37,7 @@ class Authtextfeild extends StatelessWidget {
           color: const Color(0xD44B1A23),
         ),
 
-        // زر إظهار/إخفاء كلمة المرور
+        // 
         suffixIcon: onPressed != null
             ? IconButton(
                 onPressed: onPressed,

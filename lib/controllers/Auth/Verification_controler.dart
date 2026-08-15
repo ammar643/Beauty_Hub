@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/routes/routes.dart';
+import 'package:project_user/services/Auth/otp-Service.dart';
 
 class VerificationControler extends GetxController {
   TextEditingController otpController = TextEditingController();
+VerificationService service = VerificationService();
 
+String? email;
   GlobalKey<FormState> formState = GlobalKey<FormState>();
 
   int seconds = 154; // 02:34
@@ -22,10 +26,23 @@ class VerificationControler extends GetxController {
   }
 
   @override
-  void onInit() {
-    startTimer();
-    super.onInit();
+  @override
+void onInit() {
+
+  startTimer();
+
+
+  var data = Get.arguments;
+
+  if(data != null){
+
+    email = data["email"];
+
   }
+
+
+  super.onInit();
+}
 
   void startTimer() {
     timer?.cancel();
@@ -47,18 +64,94 @@ class VerificationControler extends GetxController {
   void resendCode() {
     if (!canResend) return;
 
-    // API إعادة إرسال الكود
 
     seconds = 154;
     startTimer();
     update();
   }
 
-goTosucssfullsignup(){
+// goTosucssfullsignup(){
 
 
-  Get.offNamed(AppRoutes.SuccessfulSignIn);
+//   Get.offNamed(AppRoutes.SuccessfulSignIn);
+// }
+
+
+Future<void> verifyOtp() async {
+
+
+try{
+
+
+var response = await service.verifyOtp(
+
+email: email!,
+otp: otpController.text,
+
+);
+
+
+
+if(response.data["success"] == true){
+
+
+Get.snackbar(
+"Success",
+response.data["message"],
+);
+
+
+
+Get.offNamed(
+AppRoutes.SuccessfulSignIn
+);
+
+
+}else{
+
+
+Get.snackbar(
+"Error",
+response.data["message"],
+);
+
+
 }
+
+
+
+}
+
+on DioException catch(e){
+
+
+print(e.response?.data);
+
+
+Get.snackbar(
+"Error",
+e.response?.data["message"] ?? "Error",
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

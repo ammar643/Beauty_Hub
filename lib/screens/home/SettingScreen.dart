@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/constant/imageAssets.dart';
 import 'package:project_user/controllers/home/HomeController.dart';
+import 'package:project_user/controllers/profaile/ProfileController.dart';
 import 'package:project_user/screens/home/ChatsScreen.dart';
 import 'package:project_user/screens/home/ExploreScreen.dart';
 import 'package:project_user/screens/home/ReservationsScreen/ReservationsScreen%20.dart';
@@ -14,16 +15,22 @@ class SettingScreen extends StatelessWidget {
   SettingScreen({super.key});
 
   final HomeController controller = Get.find();
-
+final ProfileController profileController = Get.put(ProfileController());
   @override
   Widget build(BuildContext context) {
     // controller.currentIndex.value = 4;
 controller.changeIndex(4);
+    return GetBuilder<ProfileController>(
+  builder: (profile) {
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
 
-      body: SafeArea(
-        child: Column(
+     body: SafeArea(
+  child: profile.isLoading
+      ? const Center(
+          child: CircularProgressIndicator(),
+        )
+      : Column(
           children: [
             const SizedBox(height: 35),
 
@@ -51,17 +58,23 @@ controller.changeIndex(4);
                         blurRadius: 8,
                       )
                     ],
-                    image: DecorationImage(
-                      image: AssetImage(ImageAssets.testphoto),
-                      fit: BoxFit.cover,
-                    ),
+                   image: DecorationImage(
+  fit: BoxFit.cover,
+  image: profile.profilePhoto.isEmpty
+      ?  AssetImage(ImageAssets.testphoto)
+      : NetworkImage(profile.profilePhoto),
+),
                   ),
                 ),
 
                 Positioned(
                   right: 0,
                   top: 5,
-                  child: Container(
+                  child: GestureDetector(
+  onTap: () {
+    // سنضيف تغيير الصورة لاحقًا
+  },
+  child: Container(
                     width: 35,
                     height: 35,
                     decoration: const BoxDecoration(
@@ -74,6 +87,7 @@ controller.changeIndex(4);
                       size: 24,
                     ),
                   ),
+                  )
                 ),
               ],
             ),
@@ -93,7 +107,7 @@ controller.changeIndex(4);
                   child: Column(
                     children: [
                       // YOUR INFO
-                      _buildInfoSection(),
+                      _buildInfoSection(profile),
 
                       const SizedBox(height: 20),
 
@@ -220,11 +234,13 @@ controller.changeIndex(4);
             ],
           ),
         ),
-      ),
+       ),
     );
+  },
+);
   }
 
-  Widget _buildInfoSection() {
+ Widget _buildInfoSection(ProfileController profile) {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
@@ -240,43 +256,110 @@ controller.changeIndex(4);
               style: TextStyle(fontSize: 20, color: Colors.grey),
             ),
           ),
-          _buildInfo("your name", "Lojain Aljohari"),
-          _buildInfo("your email", "LojainAljohari@gmail.com"),
-          _buildInfo("your birthdate", "8/9/2004"),
+          _buildInfo(
+  "your name",
+  profile.fullName,
+),
+
+_buildInfo(
+  "your phone",
+  profile.phone,
+),
+
+_buildInfo(
+  "your birthdate",
+  profile.birthDate,
+),
+const SizedBox(height: 20),
+
+SizedBox(
+  width: double.infinity,
+  height: 45,
+  child: ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFF7A2330),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+    onPressed: () {
+      profileController.updateProfile();
+    },
+    child: const Text(
+      "Save Changes",
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+),
         ],
       ),
     );
   }
 
-  Widget _buildInfo(String title, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 15),
-        Text(title, style: const TextStyle(color: Colors.grey)),
-        const SizedBox(height: 5),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const Divider(),
-        const Align(
-          alignment: Alignment.centerRight,
-          child: Text(
-            "click to change it",
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 13,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+ Widget _buildInfo(
+  String title,
+  TextEditingController controller,
+) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const SizedBox(height: 15),
 
+      Text(
+        title,
+        style: const TextStyle(color: Colors.grey),
+      ),
+
+      const SizedBox(height: 5),
+
+     TextField(
+  controller: controller,
+  readOnly: title == "your birthdate",
+  onTap: () async {
+    if (title == "your birthdate") {
+      DateTime? picked = await showDatePicker(
+        context: Get.context!,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1950),
+        lastDate: DateTime.now(),
+      );
+
+      if (picked != null) {
+        controller.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      }
+    }
+  },
+  decoration: const InputDecoration(
+    border: InputBorder.none,
+    isDense: true,
+  ),
+  style:  TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
+),
+        
+      
+
+      const Divider(),
+
+      const Align(
+        alignment: Alignment.centerRight,
+        child: Text(
+          "click to change it",
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 13,
+          ),
+        ),
+      ),
+    ],
+  );
+}
   Widget _buildSettingsSection() {
     return Container(
       padding: const EdgeInsets.all(18),
@@ -350,5 +433,7 @@ controller.changeIndex(4);
         ),
       ],
     );
+     
+ 
   }
 }
