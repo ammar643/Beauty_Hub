@@ -35,7 +35,7 @@
 //       } else {
 //         timer.cancel();
 
-//         // الانتقال للواجهة التالية
+//     
 //         // Get.offAll(HomeScreen());
 //       }
 //     });

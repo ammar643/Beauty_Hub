@@ -56,13 +56,13 @@ class Forgotpassword extends StatelessWidget {
               /////////////////////////////////////////////////////////////////////////
               const SizedBox(height: 70),
 
-              Authtextfeild(
-                validator: (val) => validInput(val!, 10, 40, "email"),
-                hintText: "Email Address",
-                icon: Icons.email_outlined,
-                obscureText: false,
-                // mycontroller: controller.email,
-              ),
+         Authtextfeild(
+  mycontroller: controller.email,
+  validator: (val) => validInput(val!, 10, 40, "email"),
+  hintText: "Email Address",
+  icon: Icons.email_outlined,
+  obscureText: false,
+),
               const SizedBox(height: 40),
 
               // Password
@@ -70,12 +70,14 @@ class Forgotpassword extends StatelessWidget {
 
               
               ////////////////////////////////////////////
-              forgotbottion(text: "send", onPressed: () {
+            forgotbottion(
+  text: "Send",
+  onPressed: () async {
+    await controller.Forget_password();
+  },
+),
 
-                controller.goToCheckEmail();
-              }),
-
-              ////ويدجتbottion
+              
             ],
           ),
         ),

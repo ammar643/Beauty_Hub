@@ -1,69 +1,97 @@
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/routes/routes.dart';
+import 'package:project_user/services/Auth/ForgotPasswordService.dart';
 
 class ForgetPasswordcontroller extends GetxController {
   
+
+
+  ForgotPasswordService service = ForgotPasswordService();
+
+bool isLoading = false;
   TextEditingController? email;
 
   GlobalKey<FormState> formState = GlobalKey<FormState>();
  
  
  
- 
-   validate_forgetpassword() {
+  validate() {
 
-
-
-  validate_forgotpassword() {
     var formdata = formState.currentState;
+
     if (formdata!.validate()) {
-      Forget_password();
+
+      // Register Logic
+      print("Valid");
+
+    } else {
+
+      print("Not Valid");
     }
   }
-   }
-
+ 
+  
    
-   Forget_password(){
+   Future<void> Forget_password() async {
+print("Email: '${email!.text}'");
+  if (!formState.currentState!.validate()) {
+    print("Validation Failed");
+    return;
+  }
+print("Validation Passed");
+  try {
 
+    isLoading = true;
+    update();
 
+    var response = await service.forgotPassword(
+      email: email!.text,
+    );
+
+    if (response.data["success"] == true) {
+
+      Get.snackbar(
+        "Success",
+        response.data["message"],
+      );
+
+      Get.offNamed(
+        AppRoutes.CheckEmail,
+        arguments: {
+          "email": email!.text,
+          "otp": response.data["data"]["debug_otp"].toString(),
+        },
+      );
+
+    }
+
+  } on DioException catch (e) {
+
+    print(e.response?.data);
+
+    Get.snackbar(
+      "Error",
+      e.response?.data["message"] ?? "Server Error",
+    );
+
+  } finally {
+
+    isLoading = false;
+    update();
 
   }
+}
   
   
-  //  async {
-  //   try {
-  //     var response =
-  //         await ForgotpasswordService().postForgotpasswordData(email!.text);
-
-  //      if (response != null) {
-  //     if ((response["token"] != null)) {
-    
-  //        Get.offNamed(
-  //           AppRoutes.otpVerification,
-  //           arguments: {"email": email!.text},
-  //         );
-  //       } else {
-  //         Get.snackbar("Error", response["message"] ?? "Unknown error");
-  //       }
-  //     } else {
-  //       Get.snackbar("Error", "Server error");
-  //     }
-  //   } catch (e) {}
-  // }
 
  
-
- goToCheckEmail() {
-
-Get.offAllNamed(AppRoutes.CheckEmail);
-
- }
 
  goToBack() {
 
-Get.toNamed(AppRoutes.login);
+Get.offNamed(AppRoutes.login);
 
  }
 

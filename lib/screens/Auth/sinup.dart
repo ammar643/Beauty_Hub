@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/constant/imageAssets.dart';
-import 'package:project_user/controllers/sinup_controler.dart';
+import 'package:project_user/controllers/Auth/sinup_controler.dart';
 import 'package:project_user/functions/validInput.dart';
 import 'package:project_user/widgets/Auth/login/aouthtextfiled.dart';
 import 'package:project_user/widgets/sinup/FullNameFields.dart';
@@ -22,12 +22,12 @@ class Sinup extends StatelessWidget {
         child: Scaffold(
           body: Stack(
             children: [
-              // الصفحة الأولى (الصورة الخلفية)
+              // 
               SizedBox.expand(
                 child: Image.asset(ImageAssets.loginback, fit: BoxFit.cover),
               ),
 
-              // طبقة شفافة فوق الصورة
+              // 
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
@@ -50,7 +50,7 @@ class Sinup extends StatelessWidget {
                     children: [
                       ProfileImagePicker(
                         onAddTap: () {
-                          // لاحقاً: فتح المعرض
+                          // 
                         },
                       ),
 
@@ -59,7 +59,7 @@ class Sinup extends StatelessWidget {
                       Sinuptitle(),
 
                       SizedBox(height: 10),
-                      Sinuptext(onTap: controller.login), ////,ويدجت
+                      Sinuptext(onTap: controller.login), ///
 
                       SizedBox(height: 10),
 FullNameFields(
@@ -123,9 +123,20 @@ hintText: "Your Birthday",
                       //
                       SizedBox(height: 10),
                       ////////////////////////////////////////////
-                      Sinupbottion(text: "Register", onPressed: () {}),
+                     Sinupbottion(
+text: controller.isLoading 
+? "Loading..."
+: "Register",
 
-                      ////ويدجتbottion
+onPressed: () {
+
+controller.register();
+
+},
+
+),
+
+                      ////
                     ],
                   ),
                 ),

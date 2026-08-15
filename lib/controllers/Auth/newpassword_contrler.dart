@@ -2,82 +2,112 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/routes/routes.dart';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:project_user/routes/routes.dart';
+import 'package:project_user/services/Auth/ResetPasswordService.dart';
+
 class NewpasswordContrler extends GetxController {
 
-  bool isShow = false;
+  ResetPasswordService service = ResetPasswordService();
 
-  // Controllers
-  
+  bool isShow = false;
+  bool isLoading = false;
+
   TextEditingController? password;
   TextEditingController? confirm_password;
-  
 
-  // Form Key
   GlobalKey<FormState> formState = GlobalKey<FormState>();
 
-  // Validation
-  validate() {
+  late String email;
+  late String otp;
 
-    var formdata = formState.currentState;
-
-    if (formdata!.validate()) {
-
-      // Register Logic
-      print("Valid");
-
-    } else {
-
-      print("Not Valid");
-    }
-  }
-
-  // Go To Login
-  login() {
-
-   // Get.offNamed(AppRoutes.);
-  }
-
-  // Show / Hide Password
-  showPassword() {
-
-    isShow = !isShow;
-
-    update();
-  }
-
-  // Forgot Password
-  goToBack() {
-
-    Get.offNamed(AppRoutes.CheckEmail);
-  }
-
-  // Init Controllers
   @override
   void onInit() {
 
-    
     password = TextEditingController();
-    
     confirm_password = TextEditingController();
-    
-   
+
+    email = Get.arguments["email"];
+    otp = Get.arguments["otp"];
 
     super.onInit();
   }
 
-  // Dispose Controllers
-  @override
-  void dispose() {
+  Future<void> resetPassword() async {
 
-  
-    password!.dispose();
-     
-     confirm_password!.dispose();
-     
+    if (!formState.currentState!.validate()) {
+      return;
+    }
 
+    if (password!.text != confirm_password!.text) {
 
-   
+      Get.snackbar(
+        "Error",
+        "Passwords do not match",
+      );
 
-    super.dispose();
+      return;
+    }
+
+    try {
+
+      isLoading = true;
+      update();
+
+      var response = await service.resetPassword(
+
+        email: email,
+        otp: otp,
+        password: password!.text,
+        confirmPassword: confirm_password!.text,
+
+      );
+
+      if(response.data["success"]){
+
+        Get.snackbar(
+          "Success",
+          response.data["message"],
+        );
+
+        Get.offAllNamed(AppRoutes.login);
+
+      }
+
+    } on DioException catch(e){
+
+      Get.snackbar(
+        "Error",
+        e.response?.data["message"] ?? "Server Error",
+      );
+
+    } finally {
+
+      isLoading = false;
+      update();
+
+    }
+
   }
+
+  void showPassword() {
+    isShow = !isShow;
+    update();
+  }
+
+  void goToBack() {
+    Get.back();
+  }
+
+  @override
+  void onClose() {
+
+    password!.dispose();
+    confirm_password!.dispose();
+
+    super.onClose();
+  }
+
 }

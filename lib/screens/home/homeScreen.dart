@@ -16,7 +16,7 @@ import 'package:project_user/widgets/home/ImageButtonWidget.dart';
 import 'package:project_user/widgets/home/ImageButtonWidget2.dart';
 import 'package:project_user/widgets/home/MySlider.dart';
 
-const String baseUrl = 'http://10.174.176.82:8000';
+const String baseUrl = 'http://192.168.1.101:8000';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});

@@ -26,12 +26,12 @@ class Login extends StatelessWidget {
         child: Scaffold(
           body: Stack(
             children: [
-              // الصفحة الأولى (الصورة الخلفية)
+      
               SizedBox.expand(
                 child: Image.asset(ImageAssets.loginback, fit: BoxFit.cover),
               ),
 
-              // طبقة شفافة فوق الصورة
+              
               Center(
                 child: Container(
                   width: 334,
@@ -64,7 +64,7 @@ class Login extends StatelessWidget {
                       LoginTitle(),
 
                       SizedBox(height: 20),
-                      LoginRegisterText(onTap: controller.gotoSignup),////,ويدجت
+                      LoginRegisterText(onTap: controller.gotoSignup),////,
 
                       SizedBox(height: 30),
 
@@ -84,7 +84,7 @@ class Login extends StatelessWidget {
                         validator: (val) => validInput(val!, 5, 15, 'password'),
                         hintText: "Password",
                         icon: Icons.lock_outline,
-obscureText: !controller.isShow.value,
+obscureText: !controller.isShow,
                         mycontroller: controller.password,
                         onPressed: () {
                           controller.showPassword();
@@ -93,24 +93,27 @@ obscureText: !controller.isShow.value,
                       const SizedBox(height: 20),
 
                       // 
-                      inkwellforgitpassword(
-                        FirstText: "Forgot password?",
-                        SecondText: "Login as guest",
-                        onTap: () {
-                          controller.goToForgetPassword();
-                        },
-                      ),
+                     inkwellforgitpassword(
+  FirstText: "Forgot password?",
+  SecondText: "Login as guest",
+  onTap: () {
+    controller.goToForgetPassword();
+  },
+  onGuestTap: () {
+    controller.guestLogin();
+  },
+),
                       const SizedBox(height: 20),
                       ////////////////////////////////////////////
-                      LoginButton(
-                        onPressed: () {
-                          controller.validate();
-                        },
-                      ),
-                      const OrDivider(), /////ويدجت
+                   LoginButton(
+  onPressed: () {
+    controller.login();
+  },
+),
+                      const OrDivider(), /////
 
                       GoogleButton(
-                        onPressed: () {}, /////ويدجت
+                        onPressed: () {}, /////
                       ),
                     ],
                   ),

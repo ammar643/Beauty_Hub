@@ -55,7 +55,7 @@ class _MySliderState extends State<MySlider> {
       itemCount: 5,
       options: CarouselOptions(
         height: 103,
-        autoPlay: false, // نوقف التشغيل التلقائي
+        autoPlay: false, // 
         viewportFraction: 0.64,
         enlargeCenterPage: false,
         enableInfiniteScroll: false,

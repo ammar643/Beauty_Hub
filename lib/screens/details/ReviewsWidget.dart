@@ -52,7 +52,7 @@ class ReviewsWidget extends StatelessWidget {
               ],
             ),
 
-            /// زر الرجوع
+            /// 
             Positioned(
               top: 15,
               left: 10,
@@ -62,7 +62,7 @@ class ReviewsWidget extends StatelessWidget {
               ),
             ),
 
-            /// المحتوى الرئيسي
+            /// 
             Positioned(
               top: 120,
               left: 0,
@@ -85,7 +85,7 @@ class ReviewsWidget extends StatelessWidget {
                             crossAxisAlignment:
                                 CrossAxisAlignment.start,
                             children: [
-                              /// الاسم + اللوجو
+                              /// 
                                 Stack(
                                 clipBehavior: Clip.none,
                                 children: [
@@ -114,7 +114,7 @@ class ReviewsWidget extends StatelessWidget {
                                       ),
                                       const SizedBox(width: 30),
 
-                                      /// النجمة
+                                      /// 
                                       Stack(
                                         alignment: Alignment.center,
                                         children: const [
@@ -255,7 +255,7 @@ class ReviewsWidget extends StatelessWidget {
 
                               const SizedBox(height: 30),
 
-                              /// التقييم
+                              /// 
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -332,7 +332,7 @@ class ReviewsWidget extends StatelessWidget {
                       ),
                     ),
 
-                    /// زر Add Review
+                    /// 
                     Container(
                       padding: const EdgeInsets.symmetric(
                         vertical: 20,
