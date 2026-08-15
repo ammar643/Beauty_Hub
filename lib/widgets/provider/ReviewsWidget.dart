@@ -1,0 +1,15 @@
+import 'package:flutter/material.dart';
+
+class ReviewsWidget extends StatelessWidget {
+  const ReviewsWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        'التقييمات قيد التطوير',
+        style: TextStyle(color: Colors.grey),
+      ),
+    );
+  }
+}

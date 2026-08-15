@@ -1,3 +1,4 @@
 {
-    "java.project.explorer.showNonJavaResources": false
+    "java.project.explorer.showNonJavaResources": false,
+    "cmake.sourceDirectory": "C:/Users/Batoul/developer/Beauty_Hub/Beauty_Hub/linux"
 }

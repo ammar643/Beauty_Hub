@@ -10,8 +10,11 @@ import 'package:project_user/screens/Auth/sinup.dart';
 import 'package:project_user/screens/Auth/sucssfulsignup.dart';
 import 'package:project_user/screens/Auth/test.dart';
 import 'package:project_user/screens/home/homeScreen.dart';
+import 'package:project_user/screens/medical_record_screen.dart';
 
 import 'package:project_user/screens/onbordingscreen1.dart';
+import 'package:project_user/screens/product_details_screen.dart';
+import 'package:project_user/screens/wallet_screen.dart';
 
 
 final pages = <GetPage>[
@@ -48,7 +51,7 @@ GetPage(
     page: () =>  Test() ,
   ),
 
-
+GetPage(name: AppRoutes.wallet, page: () => WalletScreen()),
 
 GetPage(
     name: AppRoutes.CheckEmail,
@@ -78,9 +81,15 @@ GetPage(
     page: () =>  HomeScreen() ,
   ),
 
+GetPage(
+  name: '/product_details',
+  page: () => ProductDetailsScreen(),
+),
 
-
-
+GetPage(
+  name:AppRoutes.medical_record,
+  page: () => MedicalRecordScreen(),
+),
 
 
 

@@ -11,6 +11,9 @@ static const String Verification = '/Verification';
 static const String SuccessfulSignIn = '/SuccessfulSignIn';
 static const String homeScreen = '/homeScreen';
 
+static const String medical_record = '/medical_record';
 
+
+static const String wallet = '/wallet';
 }
   
