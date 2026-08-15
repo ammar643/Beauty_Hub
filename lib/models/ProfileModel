@@ -1,0 +1,58 @@
+class ProfileModel {
+  bool? success;
+  String? message;
+  ProfileData? data;
+
+  ProfileModel({
+    this.success,
+    this.message,
+    this.data,
+  });
+
+  ProfileModel.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    message = json['message'];
+    data = json['data'] != null
+        ? ProfileData.fromJson(json['data'])
+        : null;
+  }
+}
+
+class ProfileData {
+  int? id;
+  String? fullName;
+  String? email;
+  String? phone;
+  String? profilePhoto;
+  String? birthDate;
+  String? governorate;
+  String? city;
+  bool? notificationsEnabled;
+  String? language;
+
+  ProfileData({
+    this.id,
+    this.fullName,
+    this.email,
+    this.phone,
+    this.profilePhoto,
+    this.birthDate,
+    this.governorate,
+    this.city,
+    this.notificationsEnabled,
+    this.language,
+  });
+
+  ProfileData.fromJson(Map<String, dynamic> json) {
+    id = json["id"];
+    fullName = json["full_name"];
+    email = json["email"];
+    phone = json["phone"];
+    profilePhoto = json["profile_photo"];
+    birthDate = json["birth_date"];
+    governorate = json["governorate"];
+    city = json["city"];
+    notificationsEnabled = json["notifications_enabled"];
+    language = json["language"];
+  }
+}
