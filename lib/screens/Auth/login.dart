@@ -84,7 +84,7 @@ class Login extends StatelessWidget {
                         validator: (val) => validInput(val!, 5, 15, 'password'),
                         hintText: "Password",
                         icon: Icons.lock_outline,
-                        obscureText: !controller.isShow,
+obscureText: !controller.isShow,
                         mycontroller: controller.password,
                         onPressed: () {
                           controller.showPassword();

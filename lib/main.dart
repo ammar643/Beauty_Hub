@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_user/controllers/favorite_controller.dart';
+import 'package:project_user/controllers/home/HomeController.dart';
 import 'package:project_user/routes/pages.dart';
 import 'package:project_user/routes/routes.dart';
 
@@ -14,10 +16,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Localcontrolar controller  =  Get.put(Localcontrolar());
-
+    Get.put(FavoriteController());
+Get.put(HomeController());
     return GetMaterialApp(
-//translations:Mytranslition() ,
 
       debugShowCheckedModeBanner: false,
       //  locale: controller.language,
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       //   primarySwatch: Colors.green,
       // ),
 
-     initialRoute: AppRoutes.sinup,
+     initialRoute: AppRoutes.login,
       // initialRoute: AppRoutes.HomeScreen,
       getPages: pages,
     );

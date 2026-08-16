@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/constant/imageAssets.dart';
 import 'package:project_user/controllers/home/HomeController.dart';
-import 'package:project_user/screens/home/ChatsScreen.dart';
+import 'package:project_user/screens/ConversationsScreen.dart';
 import 'package:project_user/screens/home/ExploreScreen.dart';
 import 'package:project_user/screens/home/ReservationsScreen/CanceledReservationsScreen.dart';
 import 'package:project_user/screens/home/ReservationsScreen/ReservationsScreen%20.dart';
@@ -147,7 +147,7 @@ class AcceptedReservationsScreen extends StatelessWidget {
               }
 
               if (index == 2) {
-                Get.off(() => ChatsScreen());
+                Get.off(() => Conversationsscreen());
               }
 
               if (index == 3) {

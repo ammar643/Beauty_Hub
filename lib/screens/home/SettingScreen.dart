@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:project_user/constant/imageAssets.dart';
 import 'package:project_user/controllers/home/HomeController.dart';
 import 'package:project_user/controllers/profaile/ProfileController.dart';
-import 'package:project_user/screens/home/ChatsScreen.dart';
+import 'package:project_user/screens/ConversationsScreen.dart';
 import 'package:project_user/screens/home/ExploreScreen.dart';
 import 'package:project_user/screens/home/ReservationsScreen/ReservationsScreen%20.dart';
 import 'package:project_user/screens/home/homeScreen.dart';
@@ -158,7 +158,7 @@ controller.changeIndex(4);
               }
 
               if (index == 2) {
-                Get.off(() => ChatsScreen());
+                Get.off(() => Conversationsscreen());
               }
 
               if (index == 3) {

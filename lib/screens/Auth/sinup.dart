@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/constant/imageAssets.dart';
-import 'package:project_user/controllers/sinup_controler.dart';
+import 'package:project_user/controllers/Auth/sinup_controler.dart';
 import 'package:project_user/functions/validInput.dart';
 import 'package:project_user/widgets/Auth/login/aouthtextfiled.dart';
 import 'package:project_user/widgets/sinup/FullNameFields.dart';
