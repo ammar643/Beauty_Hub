@@ -25,7 +25,6 @@ class WalletScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // ===== الرصيد =====
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(20),
@@ -80,7 +79,6 @@ class WalletScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // ===== زر الإيداع =====
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -105,7 +103,6 @@ class WalletScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // ===== المعاملات الأخيرة =====
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

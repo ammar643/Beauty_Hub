@@ -39,7 +39,7 @@ Future<void> cancelBooking(int bookingId) async {
 
   if (result != null && result['success'] == true) {
     Get.snackbar('نجاح', 'تم إلغاء الحجز بنجاح');
-    await fetchBookings(); // تحديث القائمة
+    await fetchBookings();
   } else {
     Get.snackbar('خطأ', result?['message'] ?? 'فشل إلغاء الحجز');
   }

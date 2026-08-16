@@ -42,7 +42,6 @@ class WalletController extends GetxController {
       final data = result['data'];
       balance.value = (data['balance'] ?? 0.0).toDouble();
       Get.snackbar('نجاح', 'تم الإيداع بنجاح');
-      // إعادة تحميل المعاملات
       await fetchWallet();
     } else {
       Get.snackbar('خطأ', result?['message'] ?? 'فشل الإيداع');

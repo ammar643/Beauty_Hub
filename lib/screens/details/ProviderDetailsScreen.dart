@@ -14,6 +14,8 @@ import 'package:project_user/widgets/provider/PostsWidget.dart';
 import 'package:project_user/widgets/provider/ReviewsWidget.dart';
 import 'package:project_user/widgets/provider/ShopWidget.dart';
 
+final String baseUrl = 'http://10.174.176.82:8000';
+
 class ProviderDetailsScreen extends StatelessWidget {
   ProviderDetailsScreen({super.key});
 
@@ -22,15 +24,121 @@ class ProviderDetailsScreen extends StatelessWidget {
     ProviderDetailsController(),
   );
 
+  // ============================================================
+  // Image handling functions (no `const`)
+  // ============================================================
+
+  String _getFullImageUrl(String? path) {
+    if (path == null || path.trim().isEmpty) return '';
+    String cleanPath = path.trim();
+    if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
+      return cleanPath;
+    }
+    cleanPath = cleanPath.replaceFirst(RegExp(r'^/+'), '');
+    if (cleanPath.startsWith('storage/')) {
+      return '$baseUrl/$cleanPath';
+    }
+    return '$baseUrl/storage/$cleanPath';
+  }
+
+  Map<String, String> get _imageHeaders {
+    return {
+      'User-Agent': 'Mozilla/5.0',
+      'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+    };
+  }
+
+  ImageProvider _getImageProvider(String imageUrl) {
+    if (imageUrl.isEmpty) {
+      return AssetImage(ImageAssets.salonphoto);
+    }
+    return NetworkImage(
+      imageUrl,
+      headers: _imageHeaders,
+    );
+  }
+
+  Widget _networkImage({
+    required String imageUrl,
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.cover,
+    BorderRadius? borderRadius,
+  }) {
+    if (imageUrl.isEmpty) {
+      return Container(
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: borderRadius,
+        ),
+      );
+    }
+
+    final image = Image.network(
+      imageUrl,
+      width: width,
+      height: height,
+      fit: fit,
+      headers: _imageHeaders,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: borderRadius,
+          ),
+          child: Center(
+            child: SizedBox(
+              width: 22,
+              height: 22,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        debugPrint('❌ IMAGE ERROR: $imageUrl');
+        return Container(
+          width: width,
+          height: height,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: borderRadius,
+          ),
+          child: Center(
+            child: Icon(
+              Icons.broken_image_outlined,
+              color: Colors.grey,
+              size: 35,
+            ),
+          ),
+        );
+      },
+    );
+
+    if (borderRadius != null) {
+      return ClipRRect(
+        borderRadius: borderRadius,
+        child: image,
+      );
+    }
+    return image;
+  }
+
+  // ============================================================
+
   @override
   Widget build(BuildContext context) {
-    // تسجيل BookingController
     Get.put(BookingController());
 
     final dynamic provider = Get.arguments['provider'];
     final String type = Get.arguments['type'] ?? 'salon';
 
-    // ===== استخراج بيانات مزود الخدمة =====
+    // Extract provider data
     String name = '';
     String typeLabel = '';
     String? imageUrl;
@@ -84,13 +192,13 @@ class ProviderDetailsScreen extends StatelessWidget {
       followersCount = provider.followersCount;
     }
 
-    // ===== تهيئة حالة المتابعة =====
+    detailsController.initializeProvider(type: type, id: providerId);
+
     detailsController.initializeFollow(
       initialFollowing: false,
       initialCount: followersCount,
     );
 
-    // ===== جلب الموظفين والخدمات (للصالونات والمراكز فقط) =====
     if (provider is Salon || provider is BeautyCenter) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         detailsController.fetchEmployees(type: type, id: providerId);
@@ -98,23 +206,9 @@ class ProviderDetailsScreen extends StatelessWidget {
       });
     }
 
-    // ===== صورة العرض =====
-    ImageProvider displayImage;
-    if (imageUrl != null && imageUrl.isNotEmpty) {
-      displayImage =
-          NetworkImage(
-                imageUrl,
-                headers: {
-                  'User-Agent':
-                      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                },
-              )
-              as ImageProvider;
-    } else {
-      displayImage = AssetImage(ImageAssets.salonphoto);
-    }
+    final String fullImageUrl = _getFullImageUrl(imageUrl);
 
-    // ===== قائمة الصفحات =====
+    // ===== Pages =====
     final List<Widget> pages = [
       InfoWidget(
         description: description,
@@ -137,7 +231,7 @@ class ProviderDetailsScreen extends StatelessWidget {
         rating: rating,
         imageUrl: imageUrl,
       ),
-      const ReviewsWidget(),
+      ReviewsWidget(),
       PostsWidget(
         name: name,
         typeLabel: typeLabel,
@@ -145,11 +239,11 @@ class ProviderDetailsScreen extends StatelessWidget {
         rating: rating,
         imageUrl: imageUrl,
       ),
-      const ShopWidget(),
+      ShopWidget(),
     ];
 
     return Scaffold(
-      backgroundColor: const Color(0xffF5F5F5),
+      backgroundColor: Color(0xffF5F5F5),
       body: Stack(
         children: [
           // ===== HEADER =====
@@ -158,7 +252,7 @@ class ProviderDetailsScreen extends StatelessWidget {
               Container(
                 height: 260,
                 width: double.infinity,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Color(0xFF591C27),
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(30),
@@ -176,15 +270,15 @@ class ProviderDetailsScreen extends StatelessWidget {
             right: 0,
             bottom: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              decoration: const BoxDecoration(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(35)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
 
                   // ===== TITLE + RATING + PROFILE PHOTO =====
                   Stack(
@@ -198,30 +292,20 @@ class ProviderDetailsScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    SizedBox(
-                                      width: 160,
-                                      child: Text(
-                                        name,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          fontSize: 30,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
+                                    SizedBox(width: 160),
                                     Padding(
-                                      padding: const EdgeInsets.only(right: 10),
+                                      padding: EdgeInsets.only(right: 10),
                                       child: Stack(
                                         alignment: Alignment.center,
                                         children: [
-                                          const Icon(
+                                          Icon(
                                             Icons.star,
                                             color: Colors.amber,
                                             size: 45,
                                           ),
                                           Text(
                                             rating.toStringAsFixed(1),
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -230,10 +314,10 @@ class ProviderDetailsScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 4),
+                                SizedBox(height: 4),
                                 Text(
                                   typeLabel,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: Color(0xff4B1A23),
                                     fontSize: 18,
                                   ),
@@ -243,6 +327,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      // Main profile image using _getImageProvider
                       Positioned(
                         right: 0,
                         top: -15,
@@ -253,7 +338,9 @@ class ProviderDetailsScreen extends StatelessWidget {
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.black, width: 2),
                             image: DecorationImage(
-                              image: displayImage,
+                              image: fullImageUrl.isNotEmpty
+                                  ? _getImageProvider(fullImageUrl)
+                                  : AssetImage(ImageAssets.salonphoto),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -262,7 +349,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 30),
+                  SizedBox(height: 30),
 
                   // ===== TABS =====
                   Obx(
@@ -283,14 +370,14 @@ class ProviderDetailsScreen extends StatelessWidget {
                             salonController.changeTab(index);
                           },
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 200),
-                            padding: const EdgeInsets.symmetric(
+                            duration: Duration(milliseconds: 200),
+                            padding: EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
                               color: isSelected
-                                  ? const Color(0xff5A1824)
+                                  ? Color(0xff5A1824)
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
@@ -312,7 +399,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   // ===== PAGES =====
                   Expanded(
@@ -324,7 +411,7 @@ class ProviderDetailsScreen extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -338,7 +425,7 @@ class ProviderDetailsScreen extends StatelessWidget {
               onPressed: () {
                 Get.offAll(() => ExploreScreen());
               },
-              icon: const Icon(Icons.arrow_back, color: Colors.white, size: 28),
+              icon: Icon(Icons.arrow_back, color: Colors.white, size: 28),
             ),
           ),
         ],

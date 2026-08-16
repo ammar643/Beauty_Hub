@@ -3,7 +3,7 @@ import 'package:project_user/services/explore_service.dart';
 
 class ProductDetailsController extends GetxController {
   final ExploreService _productService = ExploreService();
-
+ var isLoadingCart = false.obs;
   var isLoading = true.obs;
   var product = <String, dynamic>{}.obs;
   var productId = 0.obs;

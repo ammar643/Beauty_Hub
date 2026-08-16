@@ -13,7 +13,6 @@ class ChatController extends GetxController {
   var otherUser = <String, dynamic>{}.obs;
   var currentUserId = 0.obs;
 
-  // ✅ قائمة رسائل وهمية (للاختبار)
   final List<Map<String, dynamic>> mockMessages = [
     {
       'id': 1,
@@ -45,7 +44,6 @@ class ChatController extends GetxController {
       'is_mine': false,
       'created_at': DateTime.now().subtract(const Duration(minutes: 1)).toIso8601String(),
     },
-    // ✅ رسالة وهمية تحتوي على صورة
     {
       'id': 6,
       'content': '',
@@ -59,7 +57,6 @@ class ChatController extends GetxController {
   void onInit() {
     super.onInit();
     currentUserId.value = _box.read('user_id') ?? 0;
-    // ✅ تحميل رسائل وهمية إذا كانت القائمة فارغة
     if (messages.isEmpty) {
       messages.value = mockMessages;
     }
@@ -104,7 +101,6 @@ class ChatController extends GetxController {
         };
       }).toList();
     } else {
-      // إذا فشل جلب الرسائل، نترك القائمة الحالية (الرسائل الوهمية)
     }
   }
 
@@ -129,7 +125,6 @@ class ChatController extends GetxController {
     isSending.value = false;
   }
 
-  // ✅ دالة إرسال صورة
   Future<void> sendImage(String imagePath) async {
     if (chatId.value == 0) {
       Get.snackbar('خطأ', 'لا توجد محادثة مفتوحة');

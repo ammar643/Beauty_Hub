@@ -24,7 +24,6 @@ bool isLoading = false;
 
     if (formdata!.validate()) {
 
-      // Register Logic
       print("Valid");
 
     } else {

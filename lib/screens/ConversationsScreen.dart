@@ -218,9 +218,7 @@ class Conversationsscreen extends StatelessWidget {
     );
   }
 
-  // ===== FOLLOWS LIST =====
   Widget _buildFollowsList() {
-    // يمكن جلب المتابعين من API لاحقاً
     final List<String> follows = [
       ImageAssets.testphoto,
       ImageAssets.onbording1,

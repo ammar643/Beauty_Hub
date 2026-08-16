@@ -4,6 +4,7 @@ import 'package:project_user/controllers/favorite_controller.dart';
 import 'package:project_user/controllers/home/HomeController.dart';
 import 'package:project_user/routes/pages.dart';
 import 'package:project_user/routes/routes.dart';
+import 'package:project_user/screens/splash_screen/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ Get.put(HomeController());
       //   primarySwatch: Colors.green,
       // ),
 
-     initialRoute: AppRoutes.login,
+     initialRoute: AppRoutes.SplashScreen,
       // initialRoute: AppRoutes.HomeScreen,
       getPages: pages,
     );

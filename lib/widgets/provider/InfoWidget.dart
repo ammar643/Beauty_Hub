@@ -330,57 +330,7 @@ class InfoWidget extends StatelessWidget {
             const SizedBox(height: 30),
           ],
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // زر المتابعة
-              Obx(
-                () => GestureDetector(
-                  onTap: controller.isFollowLoading.value
-                      ? null
-                      : () {
-                          controller.toggleFollow(
-                            type: providerType,
-                            id: providerId,
-                          );
-                        },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: controller.isFollowing.value
-                          ? Colors.grey
-                          : const Color(0xffEFD96F),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: controller.isFollowLoading.value
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Color(0xFF591C27),
-                            ),
-                          )
-                        : Text(
-                            controller.isFollowing.value
-                                ? 'Unfollow'
-                                : 'Follow',
-                            style: TextStyle(
-                              color: controller.isFollowing.value
-                                  ? Colors.white
-                                  : const Color(0xFF591C27),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          
           const SizedBox(height: 20),
         ],
       ),

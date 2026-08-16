@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_user/controllers/cart_controller.dart';
 import 'package:project_user/controllers/product_details_controller.dart';
 import 'package:project_user/utiles/image_helper.dart';
 
@@ -9,17 +10,19 @@ class ProductDetailsScreen extends StatelessWidget {
   final ProductDetailsController controller = Get.put(
     ProductDetailsController(),
   );
-
+ final CartController cartController = Get.put(
+    CartController(),
+  );
   @override
   Widget build(BuildContext context) {
     final arguments = Get.arguments;
 
-    final int productId =
-        arguments != null && arguments['productId'] != null
-            ? int.tryParse(arguments['productId'].toString()) ?? 0
-            : 0;
+    final int productId = arguments != null && arguments['productId'] != null
+        ? int.tryParse(arguments['productId'].toString()) ?? 0
+        : 0;
 
     controller.setProductId(productId);
+    // (You might also call fetchProductDetails() here, or it's already called elsewhere)
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F5F5),
@@ -27,9 +30,7 @@ class ProductDetailsScreen extends StatelessWidget {
         child: Obx(() {
           if (controller.isLoading.value) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF591C27),
-              ),
+              child: CircularProgressIndicator(color: Color(0xFF591C27)),
             );
           }
 
@@ -39,65 +40,32 @@ class ProductDetailsScreen extends StatelessWidget {
             return const Center(
               child: Text(
                 'لا توجد بيانات للمنتج',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
             );
           }
 
-          // ============================================================
-          // DATA FROM BACKEND ONLY
-          // ============================================================
-
-          final String name =
-              product['name']?.toString() ?? '';
-
-          final String description =
-              product['description']?.toString() ?? '';
-
+          // ---- Extract product data ----
+          final String name = product['name']?.toString() ?? '';
+          final String description = product['description']?.toString() ?? '';
           final double price =
-              double.tryParse(
-                    product['price']?.toString() ?? '0',
-                  ) ??
-                  0.0;
-
-          final String mainImage =
-              product['main_image']?.toString() ?? '';
-
+              double.tryParse(product['price']?.toString() ?? '0') ?? 0.0;
+          final String mainImage = product['main_image']?.toString() ?? '';
           final int stockQuantity =
-              int.tryParse(
-                    product['stock_quantity']?.toString() ?? '0',
-                  ) ??
-                  0;
-
+              int.tryParse(product['stock_quantity']?.toString() ?? '0') ?? 0;
           final bool inStock =
               product['in_stock'] == true ||
               product['in_stock']?.toString() == '1';
-
           final String providerType =
               product['provider_type']?.toString() ?? '';
-
-          // إذا كان الـ API يرجع rating استخدمه.
-          // لا نضع قيمة وهمية.
           final double rating =
-              double.tryParse(
-                    product['rating']?.toString() ?? '',
-                  ) ??
-                  0.0;
+              double.tryParse(product['rating']?.toString() ?? '') ?? 0.0;
 
           return Column(
             children: [
-              // ========================================================
-              // BACK BUTTON
-              // ========================================================
-
+              // ---- Back Button ----
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                  top: 8,
-                ),
+                padding: const EdgeInsets.only(left: 16, top: 8),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: IconButton(
@@ -113,31 +81,19 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ),
 
-              // ========================================================
-              // CONTENT
-              // ========================================================
-
+              // ---- Main Content ----
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // ==================================================
-                      // PRODUCT IMAGE
-                      // BACKEND ONLY
-                      // ==================================================
-
+                      // Product Image
                       _buildProductImage(mainImage),
 
-                      // ==================================================
-                      // PRODUCT DETAILS CARD
-                      // ==================================================
-
+                      // Product Details Card
                       Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                        ),
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         padding: const EdgeInsets.all(24),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -151,46 +107,29 @@ class ProductDetailsScreen extends StatelessWidget {
                           ],
                         ),
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // ==========================================
-                            // PRODUCT NAME + RATING
-                            // ==========================================
-
+                            // ---- Name & Rating ----
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
                                   child: Text(
-                                    name.isNotEmpty
-                                        ? name
-                                        : 'بدون اسم',
+                                    name.isNotEmpty ? name : 'بدون اسم',
                                     style: const TextStyle(
                                       fontSize: 28,
-                                      fontWeight:
-                                          FontWeight.w800,
+                                      fontWeight: FontWeight.w800,
                                       letterSpacing: -0.5,
-                                      color:
-                                          Color(0xFF1A1A2E),
+                                      color: Color(0xFF1A1A2E),
                                     ),
                                     maxLines: 2,
-                                    overflow:
-                                        TextOverflow.ellipsis,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-
-                                // ======================================
-                                // RATING FROM BACKEND ONLY
-                                // ======================================
-
                                 if (rating > 0)
                                   Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 12,
                                       vertical: 6,
                                     ),
@@ -198,24 +137,15 @@ class ProductDetailsScreen extends StatelessWidget {
                                       children: [
                                         const Icon(
                                           Icons.star,
-                                          color:
-                                              Color(0xFF591C27),
+                                          color: Color(0xFF591C27),
                                           size: 16,
                                         ),
-                                        const SizedBox(
-                                          width: 4,
-                                        ),
+                                        const SizedBox(width: 4),
                                         Text(
-                                          rating.toStringAsFixed(
-                                            1,
-                                          ),
-                                          style:
-                                              const TextStyle(
-                                            color: Color(
-                                              0xFF591C27,
-                                            ),
-                                            fontWeight:
-                                                FontWeight.bold,
+                                          rating.toStringAsFixed(1),
+                                          style: const TextStyle(
+                                            color: Color(0xFF591C27),
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 14,
                                           ),
                                         ),
@@ -227,69 +157,46 @@ class ProductDetailsScreen extends StatelessWidget {
 
                             const SizedBox(height: 8),
 
-                            // ==========================================
-                            // PROVIDER TYPE
-                            // ==========================================
-
+                            // ---- Provider Type ----
                             if (providerType.isNotEmpty)
                               Row(
                                 children: [
                                   Container(
                                     width: 4,
                                     height: 16,
-                                    decoration:
-                                        BoxDecoration(
-                                      color:
-                                          const Color(
-                                        0xFF591C27,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                        2,
-                                      ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF591C27),
+                                      borderRadius: BorderRadius.circular(2),
                                     ),
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
                                     providerType,
-                                    style:
-                                        const TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 15,
-                                      color:
-                                          Color(0xFF6B6B83),
-                                      fontWeight:
-                                          FontWeight.w500,
+                                      color: Color(0xFF6B6B83),
+                                      fontWeight: FontWeight.w500,
                                       letterSpacing: 0.3,
                                     ),
                                   ),
                                 ],
                               ),
 
-                            // ==========================================
-                            // DESCRIPTION
-                            // BACKEND ONLY
-                            // ==========================================
-
+                            // ---- Description ----
                             if (description.isNotEmpty) ...[
                               const SizedBox(height: 14),
                               Container(
                                 width: double.infinity,
-                                padding:
-                                    const EdgeInsets.all(14),
+                                padding: const EdgeInsets.all(14),
                                 decoration: BoxDecoration(
-                                  color:
-                                      const Color(0xFFF8F7FA),
-                                  borderRadius:
-                                      BorderRadius.circular(
-                                    12,
-                                  ),
+                                  color: const Color(0xFFF8F7FA),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
                                   description,
                                   style: const TextStyle(
                                     fontSize: 14,
-                                    color:
-                                        Color(0xFF4A4A5A),
+                                    color: Color(0xFF4A4A5A),
                                     height: 1.6,
                                     letterSpacing: 0.2,
                                   ),
@@ -298,79 +205,49 @@ class ProductDetailsScreen extends StatelessWidget {
                             ],
 
                             const SizedBox(height: 20),
-
-                            // ==========================================
-                            // DIVIDER
-                            // ==========================================
-
                             Container(
                               height: 1,
-                              color:
-                                  const Color(0xFFE8E8EE),
+                              color: const Color(0xFFE8E8EE),
                             ),
-
                             const SizedBox(height: 16),
 
-                            // ==========================================
-                            // PRICE + STOCK
-                            // ==========================================
-
+                            // ---- Price & Stock ----
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'السعر',
                                       style: TextStyle(
                                         fontSize: 12,
-                                        color:
-                                            Color(0xFF8A8A9E),
-                                        fontWeight:
-                                            FontWeight.w500,
+                                        color: Color(0xFF8A8A9E),
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       '${price.toStringAsFixed(2)} JOD',
                                       style: const TextStyle(
-                                        color:
-                                            Color(0xFF1A1A2E),
-                                        fontWeight:
-                                            FontWeight.bold,
+                                        color: Color(0xFF1A1A2E),
+                                        fontWeight: FontWeight.bold,
                                         fontSize: 24,
                                       ),
                                     ),
                                   ],
                                 ),
-
-                                // ======================================
-                                // STOCK FROM BACKEND
-                                // ======================================
-
                                 Container(
-                                  padding:
-                                      const EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                     horizontal: 14,
                                     vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
                                     color: inStock
-                                        ? const Color(
-                                            0xFFE8F5E9,
-                                          )
-                                        : const Color(
-                                            0xFFFFEBEE,
-                                          ),
-                                    borderRadius:
-                                        BorderRadius.circular(
-                                      20,
-                                    ),
+                                        ? const Color(0xFFE8F5E9)
+                                        : const Color(0xFFFFEBEE),
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Row(
                                     children: [
@@ -383,9 +260,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                             : Colors.red,
                                         size: 16,
                                       ),
-                                      const SizedBox(
-                                        width: 6,
-                                      ),
+                                      const SizedBox(width: 6),
                                       Text(
                                         inStock
                                             ? 'متوفر: $stockQuantity'
@@ -394,8 +269,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                           color: inStock
                                               ? Colors.green[700]
                                               : Colors.red[700],
-                                          fontWeight:
-                                              FontWeight.w600,
+                                          fontWeight: FontWeight.w600,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -406,67 +280,39 @@ class ProductDetailsScreen extends StatelessWidget {
                             ),
 
                             const SizedBox(height: 20),
-
-                            // ==========================================
-                            // DIVIDER
-                            // ==========================================
-
                             Container(
                               height: 1,
-                              color:
-                                  const Color(0xFFE8E8EE),
+                              color: const Color(0xFFE8E8EE),
                             ),
-
                             const SizedBox(height: 16),
 
-                            // ==========================================
-                            // QUANTITY
-                            // ==========================================
-
+                            // ---- Quantity Selector ----
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   'الكمية',
                                   style: TextStyle(
                                     fontSize: 16,
-                                    fontWeight:
-                                        FontWeight.w600,
-                                    color:
-                                        Color(0xFF1A1A2E),
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xFF1A1A2E),
                                   ),
                                 ),
-
                                 Container(
-                                  decoration:
-                                      BoxDecoration(
-                                    color:
-                                        const Color(0xFFF8F7FA),
-                                    borderRadius:
-                                        BorderRadius.circular(
-                                      14,
-                                    ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF8F7FA),
+                                    borderRadius: BorderRadius.circular(14),
                                     border: Border.all(
-                                      color: const Color(
-                                        0xFFE8E8EE,
-                                      ),
+                                      color: const Color(0xFFE8E8EE),
                                     ),
                                   ),
                                   child: Row(
                                     children: [
-                                      // ==============================
-                                      // MINUS
-                                      // ==============================
-
+                                      // Minus
                                       GestureDetector(
                                         onTap: () {
-                                          if (controller
-                                                  .quantity
-                                                  .value >
-                                              1) {
-                                            controller.quantity
-                                                .value--;
+                                          if (controller.quantity.value > 1) {
+                                            controller.quantity.value--;
                                           }
                                         },
                                         child: SizedBox(
@@ -475,25 +321,15 @@ class ProductDetailsScreen extends StatelessWidget {
                                           child: Obx(
                                             () => Icon(
                                               Icons.remove,
-                                              color: controller
-                                                          .quantity
-                                                          .value >
-                                                      1
-                                                  ? const Color(
-                                                      0xFF591C27,
-                                                    )
-                                                  : const Color(
-                                                      0xFFBDBDBD,
-                                                    ),
+                                              color:
+                                                  controller.quantity.value > 1
+                                                  ? const Color(0xFF591C27)
+                                                  : const Color(0xFFBDBDBD),
                                             ),
                                           ),
                                         ),
                                       ),
-
-                                      // ==============================
-                                      // QUANTITY
-                                      // ==============================
-
+                                      // Quantity
                                       SizedBox(
                                         width: 44,
                                         height: 44,
@@ -501,65 +337,44 @@ class ProductDetailsScreen extends StatelessWidget {
                                           child: Obx(
                                             () => Text(
                                               '${controller.quantity.value}',
-                                              style:
-                                                  const TextStyle(
+                                              style: const TextStyle(
                                                 fontSize: 18,
-                                                fontWeight:
-                                                    FontWeight
-                                                        .bold,
-                                                color: Color(
-                                                  0xFF1A1A2E,
-                                                ),
+                                                fontWeight: FontWeight.bold,
+                                                color: Color(0xFF1A1A2E),
                                               ),
                                             ),
                                           ),
                                         ),
                                       ),
-
-                                      // ==============================
-                                      // PLUS
-                                      // ==============================
-
+                                      // Plus
                                       GestureDetector(
                                         onTap: () {
-                                          if (!inStock ||
-                                              stockQuantity <=
-                                                  0) {
+                                          if (!inStock || stockQuantity <= 0) {
                                             Get.snackbar(
                                               'تنبيه',
                                               'المنتج غير متوفر',
-                                              backgroundColor:
-                                                  Colors.white,
-                                              colorText:
-                                                  const Color(
+                                              backgroundColor: Colors.white,
+                                              colorText: const Color(
                                                 0xFF1A1A2E,
                                               ),
                                               snackPosition:
-                                                  SnackPosition
-                                                      .BOTTOM,
+                                                  SnackPosition.BOTTOM,
                                             );
                                             return;
                                           }
-
-                                          if (controller
-                                                  .quantity
-                                                  .value <
+                                          if (controller.quantity.value <
                                               stockQuantity) {
-                                            controller.quantity
-                                                .value++;
+                                            controller.quantity.value++;
                                           } else {
                                             Get.snackbar(
                                               'تنبيه',
                                               'الكمية المتاحة هي $stockQuantity',
-                                              backgroundColor:
-                                                  Colors.white,
-                                              colorText:
-                                                  const Color(
+                                              backgroundColor: Colors.white,
+                                              colorText: const Color(
                                                 0xFF1A1A2E,
                                               ),
                                               snackPosition:
-                                                  SnackPosition
-                                                      .BOTTOM,
+                                                  SnackPosition.BOTTOM,
                                             );
                                           }
                                         },
@@ -569,16 +384,11 @@ class ProductDetailsScreen extends StatelessWidget {
                                           child: Obx(
                                             () => Icon(
                                               Icons.add,
-                                              color: controller
-                                                          .quantity
-                                                          .value <
+                                              color:
+                                                  controller.quantity.value <
                                                       stockQuantity
-                                                  ? const Color(
-                                                      0xFF591C27,
-                                                    )
-                                                  : const Color(
-                                                      0xFFBDBDBD,
-                                                    ),
+                                                  ? const Color(0xFF591C27)
+                                                  : const Color(0xFFBDBDBD),
                                             ),
                                           ),
                                         ),
@@ -591,129 +401,93 @@ class ProductDetailsScreen extends StatelessWidget {
 
                             const SizedBox(height: 24),
 
-                            // ==========================================
-                            // ACTION BUTTONS
-                            // ==========================================
-
+                            // ---- Action Buttons (Book + Total) ----
                             Row(
                               children: [
-                                // ======================================
-                                // BOOK
-                                // ======================================
-
+                                // Book Now Button
                                 Expanded(
                                   flex: 3,
                                   child: Container(
-                                    decoration:
-                                        BoxDecoration(
-                                      gradient:
-                                          const LinearGradient(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
                                         colors: [
                                           Color(0xffEFD96F),
                                           Color(0xffF5E6A3),
                                         ],
                                       ),
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                        16,
-                                      ),
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
-                                    child: ElevatedButton(
-                                      onPressed:
-                                          inStock &&
-                                                  stockQuantity >
-                                                      0
-                                              ? () {
-                                                  Get.snackbar(
-                                                    'حجز',
-                                                    'سيتم إضافة ${controller.quantity.value} من المنتج إلى الحجز',
-                                                    backgroundColor:
-                                                        Colors.white,
-                                                    colorText:
-                                                        const Color(
-                                                      0xFF1A1A2E,
-                                                    ),
-                                                    snackPosition:
-                                                        SnackPosition
-                                                            .BOTTOM,
-                                                    margin:
-                                                        const EdgeInsets
-                                                            .all(
-                                                      16,
-                                                    ),
-                                                    borderRadius:
-                                                        12,
-                                                  );
-                                                }
-                                              : null,
-                                      style:
-                                          ElevatedButton
-                                              .styleFrom(
-                                        backgroundColor:
-                                            Colors.transparent,
-                                        foregroundColor:
-                                            const Color(
-                                          0xff5A1824,
-                                        ),
-                                        disabledBackgroundColor:
-                                            Colors.transparent,
-                                        shadowColor:
-                                            Colors.transparent,
-                                        shape:
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius
-                                                  .circular(
-                                            16,
+                                    child: Obx(
+                                      () => ElevatedButton(
+                                        onPressed:
+                                            (inStock &&
+                                                stockQuantity > 0 &&
+                                                !controller.isLoadingCart.value)
+                                            ? () {
+                                                cartController.addToCart(
+                                                  productId, // from arguments
+                                                  controller.quantity.value,
+                                                );
+                                              }
+                                            : null,
+
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                          foregroundColor: const Color(
+                                            0xff5A1824,
                                           ),
+                                          disabledBackgroundColor:
+                                              Colors.transparent,
+                                          shadowColor: Colors.transparent,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              16,
+                                            ),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 18,
+                                          ),
+                                          elevation: 0,
                                         ),
-                                        padding:
-                                            const EdgeInsets
-                                                .symmetric(
-                                          vertical: 18,
-                                        ),
-                                        elevation: 0,
-                                      ),
-                                      child: const Text(
-                                        'احجز الآن',
-                                        style: TextStyle(
-                                          fontWeight:
-                                              FontWeight.w800,
-                                          fontSize: 18,
-                                        ),
+                                        child: controller.isLoadingCart.value
+                                            ? const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                      strokeWidth: 2,
+                                                      color: Color(0xff5A1824),
+                                                    ),
+                                              )
+                                            : const Text(
+                                                'احجز الآن',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w800,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   ),
                                 ),
-
                                 const SizedBox(width: 12),
 
-                                // ======================================
-                                // TOTAL
-                                // ======================================
-
+                                // Total Price Box
                                 Expanded(
                                   flex: 2,
                                   child: Container(
-                                    padding:
-                                        const EdgeInsets
-                                            .symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       horizontal: 16,
                                       vertical: 16,
                                     ),
-                                    decoration:
-                                        BoxDecoration(
-                                      gradient:
-                                          const LinearGradient(
+                                    decoration: BoxDecoration(
+                                      gradient: const LinearGradient(
                                         colors: [
                                           Color(0xFF591C27),
                                           Color(0xFF7A2D3E),
                                         ],
                                       ),
-                                      borderRadius:
-                                          BorderRadius.circular(
-                                        16,
-                                      ),
+                                      borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Center(
                                       child: Obx(
@@ -721,25 +495,17 @@ class ProductDetailsScreen extends StatelessWidget {
                                           children: [
                                             const Text(
                                               'المجموع',
-                                              style:
-                                                  TextStyle(
-                                                color: Colors
-                                                    .white70,
+                                              style: TextStyle(
+                                                color: Colors.white70,
                                                 fontSize: 11,
                                               ),
                                             ),
-                                            const SizedBox(
-                                              height: 2,
-                                            ),
+                                            const SizedBox(height: 2),
                                             Text(
                                               '${(price * controller.quantity.value).toStringAsFixed(2)} JOD',
-                                              style:
-                                                  const TextStyle(
-                                                color:
-                                                    Colors.white,
-                                                fontWeight:
-                                                    FontWeight
-                                                        .bold,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
                                                 fontSize: 18,
                                               ),
                                             ),
@@ -751,12 +517,10 @@ class ProductDetailsScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-
                             const SizedBox(height: 12),
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 24),
                     ],
                   ),
@@ -769,8 +533,7 @@ class ProductDetailsScreen extends StatelessWidget {
     );
   }
 
-  
-
+  // ---- Helper widget for product image ----
   Widget _buildProductImage(String imagePath) {
     if (imagePath.trim().isEmpty) {
       return Container(
@@ -802,8 +565,7 @@ class ProductDetailsScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-
-          // Gradient فقط، وليس صورة.
+          // Gradient overlay
           Container(
             width: double.infinity,
             height: 300,
@@ -814,19 +576,11 @@ class ProductDetailsScreen extends StatelessWidget {
                 colors: [
                   Colors.transparent,
                   Colors.transparent,
-                  const Color(0xffF5F5F5)
-                      .withOpacity(0.4),
-                  const Color(0xffF5F5F5)
-                      .withOpacity(0.9),
+                  const Color(0xffF5F5F5).withOpacity(0.4),
+                  const Color(0xffF5F5F5).withOpacity(0.9),
                   const Color(0xffF5F5F5),
                 ],
-                stops: const [
-                  0.0,
-                  0.3,
-                  0.6,
-                  0.8,
-                  1.0,
-                ],
+                stops: const [0.0, 0.3, 0.6, 0.8, 1.0],
               ),
             ),
           ),

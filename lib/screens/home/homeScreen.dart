@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:project_user/api/app_config.dart';
 import 'package:project_user/constant/imageAssets.dart';
 import 'package:project_user/controllers/home/HomeController.dart';
 import 'package:project_user/models/beauty_center_model.dart';
 import 'package:project_user/models/expert_model.dart';
 import 'package:project_user/models/post_model.dart';
 import 'package:project_user/models/salon_model.dart';
+import 'package:project_user/screens/Auth/login.dart';
 import 'package:project_user/screens/ConversationsScreen.dart';
+import 'package:project_user/screens/details/BookingScreen.dart';
 import 'package:project_user/screens/home/ExploreScreen.dart';
 import 'package:project_user/screens/home/ReservationsScreen/ReservationsScreen%20.dart';
 import 'package:project_user/screens/home/SettingScreen.dart';
@@ -16,7 +19,7 @@ import 'package:project_user/widgets/home/ImageButtonWidget.dart';
 import 'package:project_user/widgets/home/ImageButtonWidget2.dart';
 import 'package:project_user/widgets/home/MySlider.dart';
 
-const String baseUrl = 'http://192.168.1.101:8000';
+final String baseUrl = appConfig;
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -25,10 +28,6 @@ class HomeScreen extends StatelessWidget {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // ============================================================
-  // بناء رابط الصورة
-  // ============================================================
-
   String _getFullImageUrl(String? path) {
     if (path == null || path.trim().isEmpty) {
       return '';
@@ -36,26 +35,19 @@ class HomeScreen extends StatelessWidget {
 
     String cleanPath = path.trim();
 
-    // إذا كان الرابط كاملاً
     if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
       return cleanPath;
     }
 
-    // إزالة / من البداية
     cleanPath = cleanPath.replaceFirst(RegExp(r'^/+'), '');
 
-    // إذا كان Laravel يرجع storage/...
     if (cleanPath.startsWith('storage/')) {
       return '$baseUrl/$cleanPath';
     }
 
-    // إذا كان يرجع فقط اسم الملف أو المسار
     return '$baseUrl/storage/$cleanPath';
   }
 
-  // ============================================================
-  // Headers
-  // ============================================================
 
   Map<String, String> get _imageHeaders {
     return {
@@ -65,9 +57,6 @@ class HomeScreen extends StatelessWidget {
     };
   }
 
-  // ============================================================
-  // صورة Network آمنة
-  // ============================================================
 
   Widget _networkImage({
     required String imageUrl,
@@ -94,7 +83,6 @@ class HomeScreen extends StatelessWidget {
       fit: fit,
       headers: _imageHeaders,
 
-      // أثناء التحميل
       loadingBuilder:
           (
             BuildContext context,
@@ -122,7 +110,6 @@ class HomeScreen extends StatelessWidget {
             );
           },
 
-      // عند فشل الصورة
       errorBuilder:
           (BuildContext context, Object error, StackTrace? stackTrace) {
             debugPrint('❌ IMAGE ERROR');
@@ -160,9 +147,6 @@ class HomeScreen extends StatelessWidget {
       key: _scaffoldKey,
       backgroundColor: Colors.white,
 
-      // ============================================================
-      // DRAWER
-      // ============================================================
       drawer: Drawer(
         child: SafeArea(
           child: Obx(() {
@@ -235,8 +219,9 @@ class HomeScreen extends StatelessWidget {
                   title: 'الملف الشخصي',
                   onTap: () {
                     Get.back();
+                    Get.to(() => SettingScreen());
 
-                    Get.snackbar('قريباً', 'صفحة الملف الشخصي قيد التطوير');
+                    ;
                   },
                 ),
 
@@ -255,20 +240,11 @@ class HomeScreen extends StatelessWidget {
                   onTap: () {
                     Get.back();
 
-                    Get.snackbar('قريباً', 'صفحة الحجوزات قيد التطوير');
+                    Get.to(() => BookingScreen());
                   },
                 ),
 
-                _buildDrawerItem(
-                  icon: Icons.settings,
-                  title: 'الإعدادات',
-                  onTap: () {
-                    Get.back();
-
-                    Get.snackbar('قريباً', 'صفحة الإعدادات قيد التطوير');
-                  },
-                ),
-
+              
                 const Spacer(),
 
                 _buildDrawerItem(
@@ -277,7 +253,7 @@ class HomeScreen extends StatelessWidget {
                   onTap: () {
                     Get.back();
 
-                    Get.snackbar('تسجيل الخروج', 'سيتم تسجيل الخروج قريباً');
+                    Get.offAll(() => Login());
                   },
                 ),
 
@@ -288,9 +264,6 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
 
-      // ============================================================
-      // APP BAR
-      // ============================================================
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
         child: SafeArea(
@@ -338,9 +311,7 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
 
-      // ============================================================
-      // BODY
-      // ============================================================
+      // ===========================================================
       body: RefreshIndicator(
         onRefresh: () => controller.refreshData(),
 
@@ -383,8 +354,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 10),
 
               // ====================================================
-              // SALONS
-              // ====================================================
+              
               if (controller.salons.isNotEmpty)
                 _buildHorizontalSection(
                   title: 'أفضل الصالونات:',
@@ -393,9 +363,6 @@ class HomeScreen extends StatelessWidget {
 
               if (controller.salons.isNotEmpty) const SizedBox(height: 5),
 
-              // ====================================================
-              // BEAUTY CENTERS
-              // ====================================================
               if (controller.beautyCenters.isNotEmpty)
                 _buildHorizontalSection(
                   title: 'أفضل المراكز:',
@@ -405,9 +372,6 @@ class HomeScreen extends StatelessWidget {
               if (controller.beautyCenters.isNotEmpty)
                 const SizedBox(height: 5),
 
-              // ====================================================
-              // EXPERTS
-              // ====================================================
               if (controller.experts.isNotEmpty)
                 _buildHorizontalSection(
                   title: 'أفضل الخبراء:',
@@ -416,9 +380,6 @@ class HomeScreen extends StatelessWidget {
 
               if (controller.experts.isNotEmpty) const SizedBox(height: 5),
 
-              // ====================================================
-              // DIVIDER
-              // ====================================================
               Container(
                 decoration: const BoxDecoration(
                   boxShadow: [
@@ -436,9 +397,6 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
 
-              // ====================================================
-              // POSTS TITLE
-              // ====================================================
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
@@ -449,9 +407,6 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 5),
 
-              // ====================================================
-              // POSTS
-              // ====================================================
               if (controller.posts.isNotEmpty)
                 ...controller.posts.map((post) => _buildPostCard(post)),
 
@@ -470,9 +425,7 @@ class HomeScreen extends StatelessWidget {
         }),
       ),
 
-      // ============================================================
-      // BOTTOM NAVIGATION
-      // ============================================================
+            // ============================================================
       bottomNavigationBar: Container(
         height: 90,
         decoration: const BoxDecoration(
@@ -496,9 +449,7 @@ class HomeScreen extends StatelessWidget {
                 Get.to(() => Conversationsscreen());
               } else if (index == 3) {
                 Get.to(() => ReservationsScreen());
-              } else if (index == 4) {
-                Get.off(() => SettingScreen());
-              }
+              } 
             },
 
             type: BottomNavigationBarType.fixed,
@@ -636,7 +587,6 @@ class HomeScreen extends StatelessWidget {
 
               final String fullUrl = _getFullImageUrl(imageUrl);
 
-              // مهم جدًا لمعرفة من أين يأتي الرابط
               debugPrint('================================');
               debugPrint('TYPE: ${item.runtimeType}');
               debugPrint('IMAGE FROM API: $imageUrl');
@@ -668,7 +618,6 @@ class HomeScreen extends StatelessWidget {
       ],
     );
   }
-
 
   Widget _buildPostCard(Post post) {
     final String avatarUrl = _getFullImageUrl(post.userAvatar);
@@ -729,7 +678,7 @@ class HomeScreen extends StatelessWidget {
                                         height: 48,
                                         fit: BoxFit.cover,
                                       )
-                                    : const SizedBox.shrink(), // لا صورة وهمية
+                                    : const SizedBox.shrink(), 
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -817,7 +766,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                 )
               else
-                const SizedBox.shrink(), // لا توجد صور، لا شيء
+                const SizedBox.shrink(),
               // ===== LIKES COUNT =====
               if (post.likesCount > 0)
                 Padding(

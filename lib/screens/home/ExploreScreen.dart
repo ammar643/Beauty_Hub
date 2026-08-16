@@ -13,6 +13,7 @@ import 'package:project_user/models/salon_model.dart';
 
 import 'package:project_user/screens/ConversationsScreen.dart';
 import 'package:project_user/screens/details/ProviderDetailsScreen.dart';
+import 'package:project_user/screens/favorites_screen.dart';
 import 'package:project_user/screens/home/ReservationsScreen/ReservationsScreen%20.dart';
 import 'package:project_user/screens/home/SettingScreen.dart';
 import 'package:project_user/screens/home/homeScreen.dart';
@@ -59,28 +60,12 @@ class ExploreScreen extends StatelessWidget {
       return '';
     }
 
-    // ----------------------------------------------------------
-    // إذا كانت الصورة قادمة مثل:
-    //
-    // salons/cover.jpg
-    // centers/cover.jpg
-    // experts/sara.jpg
-    //
-    // تصبح:
-    //
-    // http://10.174.176.82:8000/storage/...
-    // ----------------------------------------------------------
-
     final cleanPathWithoutSlash = cleanPath.startsWith('/')
         ? cleanPath.substring(1)
         : cleanPath;
 
     return '$baseUrl/storage/$cleanPathWithoutSlash';
   }
-
-  // ============================================================
-  // CHECK IMAGE
-  // ============================================================
 
   bool _hasValidBackendImage(String? path) {
     if (path == null || path.trim().isEmpty) {
@@ -89,17 +74,14 @@ class ExploreScreen extends StatelessWidget {
 
     final value = path.trim();
 
-    // رابط كامل من Backend
     if (value.startsWith('$baseUrl/storage/')) {
       return true;
     }
 
-    // أي رابط خارجي مثل Picsum
     if (value.startsWith('http://') || value.startsWith('https://')) {
       return false;
     }
 
-    // مسار Backend مثل salons/cover.jpg
     return true;
   }
 
@@ -164,8 +146,6 @@ class ExploreScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // SEARCH BAR
-  // ============================================================
 
   Widget _buildSearchBar() {
     return Padding(
@@ -205,6 +185,10 @@ class ExploreScreen extends StatelessWidget {
           ),
 
           const SizedBox(width: 12),
+
+          
+
+          const SizedBox(width: 8),
 
           GestureDetector(
             onTap: () => _showFilterDialog(),
@@ -817,7 +801,6 @@ class ExploreScreen extends StatelessWidget {
                               );
                             },
 
-                            // لا توجد صورة بديلة
                             errorBuilder: (context, error, stackTrace) {
                               debugPrint('❌ IMAGE ERROR');
 

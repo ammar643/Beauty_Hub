@@ -12,7 +12,7 @@ VerificationService service = VerificationService();
 String? email;
   GlobalKey<FormState> formState = GlobalKey<FormState>();
 
-  int seconds = 154; // 02:34
+  int seconds = 154;
 
   Timer? timer;
 

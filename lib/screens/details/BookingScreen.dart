@@ -16,10 +16,8 @@ class BookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // استلام المعطيات من الشاشة السابقة
     final args = Get.arguments as Map<String, dynamic>?;
 
-    // استخراج البيانات (مع قيم افتراضية)
     final String name = args?['name'] ?? 'مزود الخدمة';
     final String typeLabel = args?['typeLabel'] ?? 'salon';
     final double rating = args?['rating'] ?? 0.0;
@@ -31,7 +29,6 @@ class BookingScreen extends StatelessWidget {
         ?.map((e) => Map<String, dynamic>.from(e))
         .toList() ?? [];
 
-    // تهيئة الـ BookingController بالبيانات
     bookingController.providerType.value = providerType;
     bookingController.providerId.value = providerId;
     bookingController.serviceIds.value = serviceIds;
@@ -39,7 +36,6 @@ class BookingScreen extends StatelessWidget {
       bookingController.setEmployees(employees);
     }
 
-    // صورة العرض
     ImageProvider displayImage;
     if (imageUrl != null && imageUrl.isNotEmpty) {
       displayImage = NetworkImage(
@@ -57,7 +53,6 @@ class BookingScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // الخلفية العلوية
             Column(
               children: [
                 Container(
@@ -75,7 +70,6 @@ class BookingScreen extends StatelessWidget {
               ],
             ),
 
-            // زر الرجوع
             Positioned(
               top: 20,
               left: 10,
@@ -85,7 +79,6 @@ class BookingScreen extends StatelessWidget {
               ),
             ),
 
-            // المحتوى الرئيسي
             Positioned(
               top: 120,
               left: 0,
@@ -100,7 +93,6 @@ class BookingScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ===== معلومات المزود =====
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
@@ -159,7 +151,6 @@ class BookingScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // ===== التبويبات (نفس التصميم) =====
                     Obx(
                       () => Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -198,8 +189,6 @@ class BookingScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // ===== واجهة الحجز =====
-                    // اختيار التاريخ
                     Row(
                       children: [
                         const Text('التاريخ:'),
@@ -235,7 +224,6 @@ class BookingScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
 
-                    // اختيار الموظف
                     Obx(() {
                       if (bookingController.employees.isEmpty) {
                         return const Text('لا يوجد موظفون متاحون');
@@ -266,7 +254,6 @@ class BookingScreen extends StatelessWidget {
                     }),
                     const SizedBox(height: 12),
 
-                    // الأوقات المتاحة
                     Obx(() {
                       if (bookingController.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
@@ -340,7 +327,6 @@ class BookingScreen extends StatelessWidget {
 
                     const SizedBox(height: 12),
 
-                    // زر الحجز
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

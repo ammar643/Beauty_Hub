@@ -128,4 +128,51 @@ Future<Map<String, dynamic>?> fetchServices({
     };
   }
 }
+// داخل ProviderService
+// Future<Map<String, dynamic>?> addToCart({
+//   required int productId,
+//   required int quantity,
+// }) async {
+//   try {
+//     final response = await Api().dio.post(
+//       '/api/customer/cart/items',
+//       data: {
+//         'product_id': productId,
+//         'quantity': quantity,
+//       },
+//       options: Options(
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Accept': 'application/json',
+//         },
+//       ),
+//     );
+//     return response.data as Map<String, dynamic>?;
+//   } on DioException catch (e) {
+//     return {
+//       'success': false,
+//       'message': e.response?.data['message'] ?? 'خطأ في إضافة المنتج إلى السلة',
+//     };
+//   }
+// }
+// provider_service.dart
+// Future<Map<String, dynamic>?> getCart() async {
+//   try {
+//     final response = await Api().dio.get(
+//       '/api/customer/cart',
+//       options: Options(
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Accept': 'application/json',
+//         },
+//       ),
+//     );
+//     return response.data as Map<String, dynamic>?;
+//   } on DioException catch (e) {
+//     return {
+//       'success': false,
+//       'message': e.response?.data['message'] ?? 'خطأ في جلب السلة',
+//     };
+//   }
+// }
 }

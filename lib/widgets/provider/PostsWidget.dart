@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:project_user/constant/imageAssets.dart';
 import 'package:project_user/controllers/provider_details_controller.dart';
+import 'package:project_user/screens/comments_screen.dart';
 
 class PostsWidget extends StatelessWidget {
   final String name;
@@ -24,7 +25,6 @@ class PostsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProviderDetailsController controller = Get.find();
 
-    // جلب المنشورات إذا لم تكن قد جُلبت
     if (controller.posts.isEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         controller.fetchPosts(type: typeLabel, id: providerId);
@@ -38,10 +38,7 @@ class PostsWidget extends StatelessWidget {
       final posts = controller.posts;
       if (posts.isEmpty) {
         return const Center(
-          child: Text(
-            'لا توجد منشورات',
-            style: TextStyle(color: Colors.grey),
-          ),
+          child: Text('لا توجد منشورات', style: TextStyle(color: Colors.grey)),
         );
       }
       return GridView.builder(
@@ -55,15 +52,21 @@ class PostsWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final post = posts[index];
           final caption = post['caption'] ?? '';
+          final int postId = post['id'] ?? 0;
+          final int likesCount = post['likes_count'] ?? 0;
+          final bool isLiked = post['is_liked'] ?? false;
+          final int commentsCount = post['comments_count'] ?? 0;
 
-          // استخراج الصور
+          // Extract images
           List<String> imageUrls = [];
           final mediaRaw = post['media_json'];
           if (mediaRaw is String) {
             try {
               final decoded = jsonDecode(mediaRaw);
               if (decoded is List) {
-                imageUrls = decoded.map((e) => e['url']?.toString() ?? '').toList();
+                imageUrls = decoded
+                    .map((e) => e['url']?.toString() ?? '')
+                    .toList();
               }
             } catch (e) {
               imageUrls = [];
@@ -88,7 +91,7 @@ class PostsWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ===== الصورة =====
+                  // ===== Image =====
                   Expanded(
                     child: Container(
                       width: double.infinity,
@@ -98,12 +101,13 @@ class PostsWidget extends StatelessWidget {
                                 image: NetworkImage(
                                   imageUrl,
                                   headers: {
-                                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                                    'User-Agent':
+                                        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
                                   },
                                 ),
                                 fit: BoxFit.cover,
                               )
-                            :  DecorationImage(
+                            : DecorationImage(
                                 image: AssetImage(ImageAssets.onbording1),
                                 fit: BoxFit.cover,
                               ),
@@ -111,7 +115,7 @@ class PostsWidget extends StatelessWidget {
                     ),
                   ),
 
-                  // ===== نص المنشور (Caption) =====
+                  // ===== Caption =====
                   if (caption.isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.all(6.0),
@@ -126,22 +130,76 @@ class PostsWidget extends StatelessWidget {
                       ),
                     ),
 
-                  // ===== عدد الإعجابات =====
+                  // ===== Like & Comment Buttons =====
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 4,
+                    ),
                     child: Row(
                       children: [
-                        const Icon(
-                          Icons.favorite_border,
-                          color: Colors.red,
-                          size: 14,
+                        // Like button
+                        GestureDetector(
+                          onTap: () {
+                            if (postId > 0) {
+                              controller.toggleLike(postId);
+                            }
+                          },
+                          child: Obx(() {
+                            final currentPost = controller.posts
+                                .firstWhereOrNull((p) => p['id'] == postId);
+                            final isLikedNow =
+                                currentPost?['is_liked'] ?? false;
+                            return Icon(
+                              isLikedNow
+                                  ? Icons.favorite
+                                  : Icons.favorite_border,
+                              color: isLikedNow ? Colors.red : Colors.grey,
+                              size: 18,
+                            );
+                          }),
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          '${post['likes_count'] ?? 0}',
+                          '$likesCount',
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+
+                        // Comment button
+                        GestureDetector(
+                          onTap: () {
+                            // In the comment button's onTap
+                          
+                              Get.to(
+                                CommentsScreen(),
+                                arguments: {
+                                  'postId': postId,
+                                  'providerId': providerId, 
+                                  'typeLabel': typeLabel, 
+                                },
+                              );
+                           
+                          },
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.chat_bubble_outline,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$commentsCount',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -155,4 +213,6 @@ class PostsWidget extends StatelessWidget {
       );
     });
   }
+
+  // ===== Comment Dialog =====
 }

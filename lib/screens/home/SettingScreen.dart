@@ -72,7 +72,6 @@ controller.changeIndex(4);
                   top: 5,
                   child: GestureDetector(
   onTap: () {
-    // سنضيف تغيير الصورة لاحقًا
   },
   child: Container(
                     width: 35,

@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:project_user/api/api.dart';
 
 class ChatService {
-  // ================= فتح محادثة جديدة =================
   Future<Map<String, dynamic>?> openChat({
     required String otherType,
     required int otherId,
@@ -27,7 +26,6 @@ class ChatService {
     }
   }
 
-  // ================= جلب رسائل المحادثة =================
   Future<Map<String, dynamic>?> fetchMessages({required int chatId}) async {
     try {
       final response = await Api().dio.get(
@@ -48,7 +46,6 @@ class ChatService {
     }
   }
 
-  // ================= إرسال رسالة نصية =================
   Future<Map<String, dynamic>?> sendMessage({
     required int chatId,
     required String content,

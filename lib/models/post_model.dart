@@ -26,7 +26,6 @@ class Post {
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
-    // ===== معالجة media_json (قد تكون String أو List) =====
     List<String> mediaList = [];
     dynamic mediaRaw = json['media_json'] ?? json['images'] ?? json['media'];
 

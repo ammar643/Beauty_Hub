@@ -2,6 +2,7 @@ class ImageAssets {
   static const String imageUrl = "images";
 
 
+static String chat = "$imageUrl/chat.png";
 
 static String onbording1 = "$imageUrl/onbording1.jpg";
 static String onbording2 = "$imageUrl/onbording2.jpg";

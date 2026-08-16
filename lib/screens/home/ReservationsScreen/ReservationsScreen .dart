@@ -257,7 +257,6 @@ class ReservationsScreen extends StatelessWidget {
 
   // ===== Booking Card =====
   Widget _buildReservationCard(Map<String, dynamic> booking) {
-    // استخراج البيانات
     final String providerType = booking['provider_type'] ?? 'salon';
     final String bookingDate = booking['booking_date'] ?? '';
     final String startTime = booking['start_time'] ?? '';
@@ -268,7 +267,6 @@ class ReservationsScreen extends StatelessWidget {
     final String notes = booking['notes'] ?? '';
     final int bookingId = booking['id'] ?? 0;
 
-    // تنسيق التاريخ
     String formattedDate = bookingDate;
     if (bookingDate.isNotEmpty) {
       try {
@@ -279,7 +277,6 @@ class ReservationsScreen extends StatelessWidget {
       }
     }
 
-    // تنسيق الوقت (إزالة الثواني)
     String formattedStart = startTime;
     if (startTime.isNotEmpty && startTime.length >= 5) {
       formattedStart = startTime.substring(0, 5);

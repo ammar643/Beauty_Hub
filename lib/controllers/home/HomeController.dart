@@ -27,17 +27,14 @@ class HomeController extends GetxController {
   }
 
   Future<void> _initialize() async {
-    // انتظر حتى يصبح التوكن موجوداً
     int attempts = 0;
     while (_box.read('token') == null && attempts < 15) {
       await Future.delayed(const Duration(milliseconds: 200));
       attempts++;
     }
-    // إذا كان التوكن موجوداً، جلب البيانات
     if (_box.read('token') != null) {
       await fetchHomeData();
     } else {
-      // إذا لم يتم العثور على توكن، جرب مرة أخرى بعد ثانية
       Future.delayed(const Duration(seconds: 1), () {
         if (_box.read('token') != null) {
           fetchHomeData();
@@ -77,7 +74,6 @@ class HomeController extends GetxController {
 
         stories.value = data['stories'] ?? [];
 
-        // طباعة للتصحيح
         print('✅ تم تحميل البيانات: ${salons.length} صالونات');
       } else {
         Get.snackbar('خطأ', response?['message'] ?? 'فشل تحميل البيانات');
@@ -90,9 +86,9 @@ class HomeController extends GetxController {
     }
   }
 
-  void changeIndex(int index) {
-    currentIndex.value = index;
-  }
+ void changeIndex(int index) {
+  currentIndex(index); 
+}
 
   Future<void> refreshData() async {
     await fetchHomeData();

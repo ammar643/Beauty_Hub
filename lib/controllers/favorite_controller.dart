@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:project_user/screens/favorites_screen.dart';
 import 'package:project_user/services/explore_service.dart';
 
 class FavoriteController extends GetxController {
@@ -24,7 +25,11 @@ class FavoriteController extends GetxController {
     );
 
     if (result != null && result['success'] == true) {
-      Get.snackbar('نجاح', current ? 'تمت الإزالة من المفضلة' : 'تمت الإضافة إلى المفضلة');
+      Get.snackbar(
+        'نجاح',
+        current ? 'تمت الإزالة من المفضلة' : 'تمت الإضافة إلى المفضلة',
+      );
+Get.to(() => FavoritesScreen());
     } else {
       favorites[key] = current;
       Get.snackbar('خطأ', result?['message'] ?? 'فشل تحديث المفضلة');

@@ -33,13 +33,11 @@ class BookingController extends GetxController {
   }
 
   void selectSlot(Map<String, dynamic> slot) {
-    print('✅ Selected time: ${slot['start_time']}'); // للتأكد
+    print('✅ Selected time: ${slot['start_time']}');
     selectedTime.value = slot['start_time'] ?? '';
     selectedSlot.value = slot;
   }
-  // في BookingController
 
-  // ===== جلب وعرض ملخص الحجز =====
 
   void _showSummaryDialog(Map<String, dynamic> data) {
     final selection = data['selection'] ?? {};

@@ -15,14 +15,13 @@ class ExploreController extends GetxController {
   var products = <Map<String, dynamic>>[].obs;
   var categories = <Map<String, dynamic>>[].obs;
 
-  // ===== Tab & Filters =====
   var currentTabIndex = 0.obs;
   var selectedCity = ''.obs;
   var selectedTag = ''.obs;
   var searchQuery = ''.obs;
   var minRating = 0.0.obs;
   var genderServed = ''.obs;
-  var selectedCategory = ''.obs; // For products
+  var selectedCategory = ''.obs;
 
   var availableCities = <String>[].obs;
   final List<String> availableTags = ['hair', 'make up', 'women', 'laser', 'skin'];

@@ -1,6 +1,6 @@
 
 String get appConfig {
-  const appUrl = 'http://192.168.1.101:8000';
+  const appUrl = 'http://10.99.212.82:8000';
 
   return appUrl;
 }

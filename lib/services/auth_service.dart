@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:project_user/api/api.dart'; // تأكد من المسار الصحيح
-import 'package:get_storage/get_storage.dart';
+import 'package:project_user/api/api.dart';
 
 class AuthService {
   final Dio _dio = Api().dio;

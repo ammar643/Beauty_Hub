@@ -7,7 +7,6 @@ class MedicalRecordController extends GetxController {
   var isLoading = true.obs;
   var isSaving = false.obs;
 
-  // بيانات النموذج
   var allergies = ''.obs;
   var skinType = ''.obs;
   var hairType = ''.obs;
@@ -19,7 +18,6 @@ class MedicalRecordController extends GetxController {
   var waist = ''.obs;
   var bloodType = ''.obs;
 
-  // ✅ قوائم الخيارات (القيمة الفعلية + التسمية المعروضة)
   final List<Map<String, String>> skinTypes = [
     {'value': 'dry', 'label': 'جافة'},
     {'value': 'oily', 'label': 'دهنية'},
@@ -33,7 +31,7 @@ class MedicalRecordController extends GetxController {
     {'value': 'curly', 'label': 'مجعد'},
     {'value': 'coily', 'label': 'كيرلي'},
     {'value': 'rough', 'label': 'خشن'},
-    {'value': 'streat', 'label': 'أملس (مستقيم)'}, // لتطابق قيمة الـ API
+    {'value': 'streat', 'label': 'أملس (مستقيم)'},
   ];
   final List<Map<String, String>> bloodTypes = [
     {'value': 'A+', 'label': 'A+'},
@@ -52,27 +50,37 @@ class MedicalRecordController extends GetxController {
     fetchRecord();
   }
 
-  Future<void> fetchRecord() async {
-    isLoading.value = true;
+ Future<void> fetchRecord() async {
+  isLoading.value = true;
+  try {
     final result = await _service.fetchMedicalRecord();
 
-    if (result != null && result['success'] == true) {
+    if (result != null &&
+        result['success'] == true &&
+        result['data'] != null &&
+        result['data'] is Map<String, dynamic>) {
+      
       final data = result['data'] as Map<String, dynamic>;
-      allergies.value = data['allergies'] ?? '';
-      skinType.value = data['skin_type'] ?? '';
-      hairType.value = data['hair_type'] ?? '';
-      medications.value = data['medications'] ?? '';
-      chronicConditions.value = data['chronic_conditions'] ?? '';
-      surgeries.value = data['previous_procedures'] ?? '';
-      notes.value = data['notes'] ?? '';
+
+      allergies.value = data['allergies']?.toString() ?? '';
+      skinType.value = data['skin_type']?.toString() ?? '';
+      hairType.value = data['hair_type']?.toString() ?? '';
+      medications.value = data['medications']?.toString() ?? '';
+      chronicConditions.value = data['chronic_conditions']?.toString() ?? '';
+      surgeries.value = data['previous_procedures']?.toString() ?? '';
+      notes.value = data['notes']?.toString() ?? '';
       weight.value = data['weight']?.toString() ?? '';
       waist.value = data['waist']?.toString() ?? '';
-      bloodType.value = data['blood_type'] ?? '';
+      bloodType.value = data['blood_type']?.toString() ?? '';
     } else {
-      Get.snackbar('خطأ', result?['message'] ?? 'فشل تحميل السجل الطبي');
+      Get.snackbar('تنبيه', 'لا توجد بيانات سجل طبي حالياً، يمكنك إدخالها');
     }
+  } catch (e) {
+    Get.snackbar('خطأ', 'حدث خطأ أثناء تحميل السجل: $e');
+  } finally {
     isLoading.value = false;
   }
+}
 
   Future<void> saveRecord() async {
     isSaving.value = true;

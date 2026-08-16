@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:project_user/api/api.dart';
 
 class BookingService {
-  // ================= جلب الأوقات المتاحة =================
   Future<Map<String, dynamic>?> fetchAvailableTimes({
     required String providerType,
     required int providerId,
@@ -34,7 +33,6 @@ class BookingService {
     }
   }
 
-  // ================= إنشاء حجز جديد =================
   Future<Map<String, dynamic>?> createBooking({
     required String providerType,
     required int providerId,

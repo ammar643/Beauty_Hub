@@ -58,7 +58,6 @@ Future<void> register() async {
       gender: "male",
     );
 
-    // ✅ تأكد من أن الاستجابة موجودة
     if (response.data != null && response.data["success"] == true) {
       Get.snackbar(
         "Success",
@@ -122,13 +121,11 @@ Future<void> register() async {
 
 
 
-  // Go To Login
   login() {
 
     Get.toNamed(AppRoutes.login);
   }
 
-  // Show / Hide Password
   showPassword() {
 
     isShow = !isShow;
@@ -136,13 +133,11 @@ Future<void> register() async {
     update();
   }
 
-  // Forgot Password
   goToForgetPassword() {
 
     Get.offNamed(AppRoutes.forgotpassword);
   }
 
-  // Init Controllers
   @override
   void onInit() {
 
@@ -157,7 +152,6 @@ Future<void> register() async {
     super.onInit();
   }
 
-  // Dispose Controllers
   @override
   void dispose() {
 
